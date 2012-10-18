@@ -2,6 +2,7 @@
 
 ## What is it?
 Clutch is a tool for passing instructions to EWMH compliant window managers to position then in any one of eight possible locations:
+
 * Top Half
 * Upper Right Quarter
 * Right Half
