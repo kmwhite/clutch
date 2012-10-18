@@ -2,14 +2,14 @@
 
 ## What is it?
 Clutch is a tool for passing instructions to EWMH compliant window managers to position then in any one of eight possible locations:
- * Top Half
- * Upper Right Quarter
- * Right Half
- * Bottom Right Quarter
- * Bottom Half
- * Bottom Left Quarter
- * Left Half
- * Top Left Quarter
+* Top Half
+* Upper Right Quarter
+* Right Half
+* Bottom Right Quarter
+* Bottom Half
+* Bottom Left Quarter
+* Left Half
+* Top Left Quarter
 
 It was inspired by the great tool [ShiftIt!](https://github.com/fikovnik/ShiftIt) for Mac OS X
 
