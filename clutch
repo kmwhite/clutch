@@ -1,0 +1,86 @@
+#!/usr/bin/env python
+
+# Standard Library Imports
+from __future__ import print_function
+import os
+import sys
+
+# Third-Party Imports
+import colors
+
+try:
+    import wmctrl
+except Exception as err:
+    print(colors.red('Could not import `wmctrl`. Please install it.'),
+          file=sys.stderr)
+    sys.exit(1)
+
+import Xlib.display
+
+
+# Local Imports
+# ...
+
+def err_msg(msg):
+    print(colors.red(msg), file=sys.stderr)
+
+def exec_test(path):
+    return (os.path.isfile(fpath) and os.access(fpath, os.X_OK))
+
+for executable in ['xprop', 'wmctrl']:
+    path_list = os.environ['PATH'].split(':')
+    exec_list = [ os.path.join(path, executable) for path in path_list ]
+    stat_list = [ exec_test(fpath) for fpath in exec_list ]
+
+    try:
+        assert True in stat_list
+    except AssertionError:
+        err_msg("Could not find `{0}` in your path.".format(executable))
+        err_msg('Please install it using your package manager.')
+        sys.exit(2)
+
+# Given that we have everything we need to run, get some screen info:
+screen = Xlib.display.Display().screen()
+
+# Values to remove from the Height values
+BORDER = 4
+DECORATION = 16
+SLIT = 22
+
+BUFFER = BORDER + DECORATION + SLIT
+
+ORIGIN = 0
+FULL_WIDTH = screen.width_in_pixels
+HALF_WIDTH = screen.width_in_pixels / 2
+FULL_HEIGHT = (screen.height_in_pixels - BUFFER)
+HALF_HEIGHT = ((screen.height_in_pixels - BUFFER)/ 2)
+
+# We have a bug here, in regards to Fluxbox.
+# The values passed in dictate where the window will go NOT including the
+# window decorations. Because of this, we get the overlap
+try:
+    if sys.argv[1] == 'top':
+        position = [ORIGIN, ORIGIN, FULL_WIDTH, HALF_HEIGHT]
+    elif sys.argv[1] == 'top-right':
+        position = [HALF_WIDTH, ORIGIN, HALF_WIDTH, HALF_HEIGHT]
+    elif sys.argv[1] == 'right':
+        position = [HALF_WIDTH, ORIGIN, HALF_WIDTH, FULL_HEIGHT]
+    elif sys.argv[1] == 'bottom-right':
+        position = [HALF_WIDTH, HALF_HEIGHT, HALF_WIDTH, HALF_HEIGHT]
+    elif sys.argv[1] == 'bottom':
+        position = [ORIGIN, HALF_HEIGHT, FULL_WIDTH, HALF_HEIGHT]
+    elif sys.argv[1] == 'bottom-left':
+        position = [ORIGIN, HALF_HEIGHT, HALF_WIDTH, HALF_HEIGHT]
+    elif sys.argv[1] == 'left':
+        position = [ORIGIN, ORIGIN, HALF_WIDTH, FULL_HEIGHT]
+    elif sys.argv[1] == 'top-left':
+        position = [ORIGIN, ORIGIN, HALF_WIDTH, HALF_HEIGHT]
+    else:
+        err_msg('What kind of argument is that?')
+        sys.exit(3)
+
+    # Execute the move
+    wmctrl.Window.get_active().resize_and_move(*position)
+except IndexError as err:
+    err_msg('No window instructions provided')
+    sys.exit(3)
