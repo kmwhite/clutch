@@ -15,6 +15,7 @@ It was inspired by the great tool [ShiftIt!](https://github.com/fikovnik/ShiftIt
 
 ## Using it
 To use it, set up hotkeys in your window manager to trigger the script. A fluxbox example is:
+
     # Clutch Relating Bindings
     Mod1 Mod4 Up :Exec clutch top
     Shift Mod1 Mod4 Up :Exec clutch top-right
